@@ -1,5 +1,5 @@
 #include "ofxInstagram.h"
-#include <unistd.h>
+
 #pragma mark - Setup
 //--------------------------------------------------------------
 void ofxInstagram::setup(string auth_token, string clientID)
@@ -449,6 +449,23 @@ void ofxInstagram::unlikeMedia(string mediaID)
 // *  GET Search for Tag Objects
 // *
 //--------------------------------------------------------------
+
+/// https://api.instagram.com/v1/tags/tagheuergeneva/media/recent?client_id=a77702ae76d14c518c7b4411e4f742a4
+
+void ofxInstagram::getMediaWithTag(string tag, string clientId, int limit)
+{
+    stringstream url;
+    url << "https://api.instagram.com/v1/tags/" << tag << "/media/recent?client_id=" << clientId ;
+    url << "&count=" << limit;
+    
+    response = ofLoadURL(url.str());
+    
+   // cout << "This is your request: " << url.str()  <<endl;
+    
+    json.parse(response.data);
+}
+
+
 void ofxInstagram::getInfoForTags(string tagname)
 {
     stringstream url;
@@ -643,6 +660,8 @@ deque <basicData> ofxInstagram::getBasicData()
     deque <basicData> data;
     data.resize(json["data"].size());
     
+   // cout << "data.resize(json['data'].size()) " << json["data"].size() << endl;
+    
     for(unsigned int i = 0; i < json["data"].size(); ++i)
     {
         data[i].user = json["data"][i]["user"]["username"].asString();
@@ -650,6 +669,7 @@ deque <basicData> ofxInstagram::getBasicData()
         data[i].imageURL = json["data"][i]["images"]["low_resolution"]["url"].asString();
         data[i].created_at = json["data"][i]["created_time"].asString();
         data[i].caption = json["data"][i]["caption"]["text"].asString();
+		data[i].distance = json["data"][i]["distance"]["text"].asString();
     }
     return data;
 }

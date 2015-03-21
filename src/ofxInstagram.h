@@ -15,6 +15,7 @@ struct basicData
     string user;
     string created_at;
     string caption;
+	 string distance;
 };
 
 class ofxInstagram : public Json::Value {
@@ -102,6 +103,9 @@ class ofxInstagram : public Json::Value {
         //--------------------------------------------------------------
         // GET Info about Media Object
         void getMediaInformation(string mediaID);
+    
+    
+        void getMediaWithTag(string tag, string clientId, int limit);
     
         // GET Info about Media using Shortcode
         void getMediaInfoUsingShortcode(string shortcode = "");
